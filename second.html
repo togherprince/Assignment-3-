@@ -1,0 +1,260 @@
+     <!DOCTYPE html>
+<html>
+
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+<head>
+ <h2 style="background-color:rgb(128,128,128);color:white">
+		 Some Statistics about the chosen city:  
+</h2>
+</head>
+	<meta charset="utf8">  
+  	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+   <link href="/static/css/bootstrap.min.css" rel="stylesheet" media="screen">
+   <link href="/static/css/bootstrap-responsive.css" rel="stylesheet">
+   <link href="/static/css/bootstrap.css" rel="stylesheet">
+
+  <style type="text/css">
+	html, body { height:100%; margin:0; padding:0 }
+div { position:fixed; width:50%; height:50% }
+#NW { top:0;   left:0;  }
+#NE { top:0;   left:50%;}
+#SW { top:50%; left:0;  }
+#SE { top:50%; left:50%;}    
+
+      }
+	  header
+{
+    background-color:#ECF3F3;
+}
+  .preview {
+  	float: left;
+	margin-right: 20px;
+  }    
+  .preview .thumb {
+    border: 0 none;
+    margin-top: 5px;
+    width: 252px;
+  }
+	
+	/* Custom container */
+      .container-narrow {
+        margin: 0 auto;
+        max-width: 900px;
+	border-style: solid;
+	border-color: transparent;
+	background-color: #D8D8D8	;
+	z-index: 9;
+	height : 100%;
+	-moz-border-radius: 15px;
+	border-radius: 15px;
+	
+      }
+      .container-narrow > hr {
+        margin: 30px 0;
+      }
+
+	.sidebar-nav {
+        padding: 20px 0;
+      }
+
+      @media (max-width: 980px) {
+        /* Enable use of floated navbar text */
+        .navbar-text.pull-right {
+          float: none;
+          padding-left: 5px;
+          padding-right: 5px;
+        }
+       
+
+  </style>
+	 <body>
+         <div class="container">
+		 
+
+<div id="NW">
+<hr>
+<p style="text-indent: 5em;"><b>property types vs. Number of properties</b></p>
+<div id="myDiv" style="width: 480px; height: 400px;"><!-- Plotly chart will be drawn inside this DIV --></div>
+</div>
+
+<div id="NE">
+<hr>
+<p><b> Concellation policy vs. Percentage of properties</b></p>
+<div id="myDiv2" style="width: 480px; height: 380px;"><!-- Plotly chart will be drawn inside this DIV --></div>
+</div>
+
+<div id="SW">
+<hr>
+<p style="text-indent: 5em;"><b>Availability during year vs. Number of properties</b></p>
+ <div id="myDiv3" style="width: 480px; height: 400px;"><!-- Plotly chart will be drawn inside this DIV --></div>
+</div>
+
+ <div id="SE">
+ <hr>
+ <p><b>Price by dollars vs. Number of properties</b></p>
+<div id="myDiv4" style="width: 480px; height: 400px;"><!-- Plotly chart will be drawn inside this DIV --></div>
+</div>
+
+	  
+	  </div>
+
+	 </body>
+</html>
+	 
+	 
+	 
+	 <script type="text/javascript">
+         <!--
+		        var x = [];
+                var y = [];
+				var x2 =[];
+				var y2 =[];
+				var x3=[];
+				var y3=[];
+				var x4=[];
+				var y4=[];
+				var sub;
+
+         //-->
+      </script>
+<!--loop for the first data in order to exract the data from json to pass them to JS varablies to visualise them. we did that 4 times-->
+
+{% for key1, value1 in data.iteritems() %}
+   
+	  {% set outer_loop = loop %}
+    {% for key2 in  value1 %}
+	
+       <script type="text/javascript">
+	 x.push("{{ key2.key }}");
+	 y.push("{{ key2.value }}");
+      </script>
+
+    {% endfor %}  
+{% endfor %}
+
+
+<!--process second data-->
+
+
+{% for key1, value1 in data2.iteritems() %}
+   
+	  {% set outer_loop = loop %}
+    {% for key2 in  value1 %}  
+
+     <script type="text/javascript">
+	 x2.push("{{ key2.key }}");
+	 y2.push("{{ key2.value }}");
+      </script>
+
+    {% endfor %}
+     
+{% endfor %}
+
+
+
+<!--process third data-->
+
+{% for key1, value1 in data3.iteritems() %}
+   
+	  {% set outer_loop = loop %}
+    {% for key2 in  value1 %}
+	   
+       <script type="text/javascript">
+	 x3.push("{{ key2.key }}");
+	 y3.push("{{ key2.value }}");
+      </script>
+    {% endfor %}
+     
+{% endfor %}
+
+
+<!--process fourth data-->
+
+{% for key1, value1 in data4.iteritems() %}
+   
+	  {% set outer_loop = loop %}
+    {% for key2 in  value1 %}
+       <script type="text/javascript">
+	   	 sub="{{ key2.key }}";
+		x4.push(parseInt(sub.substring(1,sub.length-3)));
+
+	    y4.push("{{ key2.value }}");
+	 
+      </script>
+
+    {% endfor %}
+     
+{% endfor %}
+
+
+
+      <script type="text/javascript">
+         <!--
+ <!--visualise first data-->
+
+    var data = [{
+	type: 'bar',
+  x: y,
+  y: x,
+  orientation: 'h'
+}];
+
+Plotly.newPlot('myDiv', data);
+
+
+
+
+ <!--visualise second data-->
+
+var data = [{
+  values: y2,
+  labels: x2,
+  type: 'pie'
+}];
+
+var layout = {
+  height: 380,
+  width: 480
+};
+
+Plotly.newPlot('myDiv2', data, layout);
+
+
+
+
+
+ <!--visualise third data-->
+
+var trace = {
+  x: x3,
+  y: y3,
+  mode: 'lines',
+  connectgaps: true
+};
+
+var data = [trace];
+
+var layout = {
+  
+  showlegend: false
+};
+
+Plotly.newPlot('myDiv3', data, layout);
+
+
+
+	 <!--visualise fourth data-->
+
+var data = [
+  {
+    x: x4,
+    type: 'histogram'
+  }
+];
+Plotly.newPlot('myDiv4', data);
+
+         //-->
+      </script>
+
